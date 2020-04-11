@@ -14,7 +14,14 @@ body {
     justify-content: center;
 }
 
-.wrapper {
+.main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.cards-wrapper {
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -44,6 +51,49 @@ body {
     margin: 0px 15px 0px 15px;
 }
 
-.temp-low {
+
+
+.current-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 100px;
+
+}
+
+.current {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+}
+
+.current-location {
+    font-size: 40px;
+    padding: 0px;
+    margin: 0px;
+}
+
+.current-img {
+    height: 300px;
+    width: auto;
+}
+
+.current-temp {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.current-temp-high {
     margin: 0px 15px 0px 15px;
 }
+
+.get-location {
+    margin: 15px;
+    font-size: 20px;
+}
+
