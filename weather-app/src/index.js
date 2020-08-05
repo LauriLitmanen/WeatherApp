@@ -44,7 +44,7 @@ class Current extends React.Component {
             (result) => {
                 
                 let number = result.main.temp;
-                let rounded = Math.round(number * 10) / 10;
+                let rounded = Math.round(number);
                 this.setState({
                     location: result.name,
                     temp: rounded,
@@ -62,6 +62,7 @@ class Current extends React.Component {
         return (
         <div className="current" >
             <h1 className="current-location">{this.state.location}</h1>
+            <h2>Today</h2>
             <img className="current-img" src= {process.env.PUBLIC_URL + '/icons/' +  this.state.src + '.png'}/>
             
             <div className="current-temp">
@@ -242,35 +243,36 @@ class App extends React.Component {
 
             day1 =  <Card 
                             src={this.state.datesList.day1[1].icon}
-                            temp_high={Math.round(this.state.datesList.day1[1].temp_max * 10) / 10}
+                            temp_high={Math.round(this.state.datesList.day1[1].temp_max)}
                             date={day1Date} 
                             />;
 
             day2 =  <Card 
                             src={this.state.datesList.day2[5].icon}
-                            temp_high={Math.round(this.state.datesList.day2[1].temp_max * 10) / 10}
+                            temp_high={Math.round(this.state.datesList.day2[1].temp_max)}
                             date={day2Date}
                             />; 
             day3 =  <Card 
                             src={this.state.datesList.day3[5].icon}
-                            temp_high={Math.round(this.state.datesList.day3[1].temp_max * 10) / 10}
+                            temp_high={Math.round(this.state.datesList.day3[1].temp_max)}
                             date={day3Date}
                             />; 
             day4 =  <Card 
                             src={this.state.datesList.day4[5].icon}
-                            temp_high={Math.round(this.state.datesList.day4[1].temp_max * 10) / 10}
+                            temp_high={Math.round(this.state.datesList.day4[1].temp_max)}
                             date={day4Date}
                             />; 
             day5 =  <Card 
                             src={this.state.datesList.day5[5].icon}
-                            temp_high={Math.round(this.state.datesList.day5[1].temp_max * 10) / 10}
+                            temp_high={Math.round(this.state.datesList.day5[1].temp_max)}
                             date={day5Date}
                             />; 
             day6 =  <Card 
                             src={this.state.datesList.day6[this.state.datesList.day6.length -1].icon}
-                            temp_high={Math.round(this.state.datesList.day6[this.state.datesList.day6.length -1].temp_max * 10 ) / 10}
+                            temp_high={Math.round(this.state.datesList.day6[this.state.datesList.day6.length -1].temp_max)}
                             date={day6Date}
-                            />; 
+                            />;
+            
         }
         else {
             day1 = <Card/>;
@@ -279,11 +281,18 @@ class App extends React.Component {
             day4 = <Card/>;
             day5 = <Card/>;
             day6 = <Card/>;
+           
+            
+         
 
         }
         return(
             
             <div className="main" >
+    
+      
+    
+            
                 <div className="current-wrapper"  >
                     <Current></Current>
                 </div>
@@ -295,7 +304,7 @@ class App extends React.Component {
                     {day5}
                     {day6}
                 </div>
-                
+              
             </div>
     );}
         
@@ -319,5 +328,6 @@ function parseDate(dateString) {
     console.log(day + '.' + month + ' ' + hour);
     return(day + '.' + month );
 }
+
 
 
