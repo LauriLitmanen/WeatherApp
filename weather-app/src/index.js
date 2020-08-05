@@ -15,6 +15,8 @@ class Current extends React.Component {
             link: '',
             location: '',
             locationKey: '',
+            wind_deg: '',
+            wind_speed: '',
             src: null,
             temp: null,
             data: null,
@@ -45,10 +47,13 @@ class Current extends React.Component {
                 
                 let number = result.main.temp;
                 let rounded = Math.round(number);
+               
                 this.setState({
                     location: result.name,
                     temp: rounded,
                     src: result.weather[0].icon,
+                    wind_deg: result.wind.deg,
+                    wind_speed: result.wind.speed,
                 });
                 console.log(result);
             });
@@ -62,8 +67,13 @@ class Current extends React.Component {
         return (
         <div className="current" >
             <h1 className="current-location">{this.state.location}</h1>
-            <h2>Today</h2>
+            <h2>Now</h2>
             <img className="current-img" src= {process.env.PUBLIC_URL + '/icons/' +  this.state.src + '.png'}/>
+            <div className="wind-container">
+                    <img className="wind" src={process.env.PUBLIC_URL + '/icons/' + 'wind.png'} style={{transform: "rotate("+ this.state.wind_deg +"deg)"}}></img>
+                    <div className="wind-speed" >{Math.round(this.state.wind_speed)}</div>
+            </div>
+
             
             <div className="current-temp">
                 <p className="current-temp-high">{this.state.temp + '°'}</p>
@@ -89,7 +99,10 @@ class Card extends React.Component {
             <button className="card">
                 <p className="date">{this.props.date}</p>
                 <img src={process.env.PUBLIC_URL + '/icons/' +  this.props.src + '.png'}></img>
-                <img className="wind" src={process.env.PUBLIC_URL + '/icons/' + 'wind.png'} style={{transform: "rotate("+ this.props.wind_deg +"deg)"}}></img>
+                <div className="wind-container">
+                    <img className="wind" src={process.env.PUBLIC_URL + '/icons/' + 'wind.png'} style={{transform: "rotate("+ this.props.wind_deg +"deg)"}}></img>
+                    <div className="wind-speed" >{this.props.wind_speed}</div>
+                </div>
                 <div className="temp">
                     <p className="temp-high">{this.props.temp_high + '°'}</p> 
                     <p className="temp-low">{this.props.temp_low + '°'}</p>              
@@ -141,7 +154,6 @@ class App extends React.Component {
         .then(res => res.json())
         .then(
         (result) => {
-            
             let i;
             let day = 1; 
             var datesList  =  {
@@ -169,7 +181,7 @@ class App extends React.Component {
                     }
                     else {                                              //  if not then the day has changed
                         day = day + 1;
-                        highest_temp = null;
+                        highest_temp = null;                            // on day change discard highest and lowest temp
                         lowest_temp = null;                              
                     }
                 }
@@ -239,7 +251,7 @@ class App extends React.Component {
             //console.log(result);
             //console.log(this.state.datesList.length);
             //console.log(this.state.datesList.day1[1].icon);
-            console.log('datesList: ' , this.state.datesList);
+            //console.log('datesList: ' , this.state.datesList);
             //this.renderCard(1);
             this.setState({
                 isLoaded: true,
@@ -260,12 +272,12 @@ class App extends React.Component {
         const isLoaded = this.state.isLoaded;
         let day1, day2, day3, day4, day5, day6;
         if(isLoaded) {
-           let day1Date = parseDate(this.state.datesList.day1[this.state.datesList.day1.length -1].dateAndTime);
-           let day2Date = parseDate(this.state.datesList.day2[5].dateAndTime);
-           let day3Date = parseDate(this.state.datesList.day3[5].dateAndTime);
-           let day4Date = parseDate(this.state.datesList.day4[5].dateAndTime);
-           let day5Date = parseDate(this.state.datesList.day5[5].dateAndTime);
-           let day6Date = parseDate(this.state.datesList.day6[this.state.datesList.day6.length -1].dateAndTime);
+           let day1Date = getDayName(this.state.datesList.day1[this.state.datesList.day1.length -1].dateAndTime, "en", "EN") + " " + parseDate(this.state.datesList.day1[this.state.datesList.day1.length -1].dateAndTime);
+           let day2Date = getDayName(this.state.datesList.day2[5].dateAndTime, "en", "EN") + " " + parseDate(this.state.datesList.day2[5].dateAndTime);
+           let day3Date = getDayName(this.state.datesList.day3[5].dateAndTime, "en", "EN") + " " + parseDate(this.state.datesList.day3[5].dateAndTime);
+           let day4Date = getDayName(this.state.datesList.day4[5].dateAndTime, "en", "EN") + " " + parseDate(this.state.datesList.day4[5].dateAndTime);
+           let day5Date = getDayName(this.state.datesList.day5[5].dateAndTime, "en", "EN") + " " + parseDate(this.state.datesList.day5[5].dateAndTime);
+           let day6Date = getDayName(this.state.datesList.day6[this.state.datesList.day6.length -1].dateAndTime, "en", "EN") + " " + parseDate(this.state.datesList.day6[this.state.datesList.day6.length -1].dateAndTime);
 
             day1 =  <Card 
                             src={this.state.datesList.day1[1].icon}
@@ -273,6 +285,7 @@ class App extends React.Component {
                             temp_low={Math.round(this.state.datesList.day1[this.state.datesList.day1.length -1].lowest_temp)}
                             date={day1Date}
                             wind_deg={this.state.datesList.day1[1].wind_deg}
+                            wind_speed={Math.round(this.state.datesList.day1[1].wind_speed)}
                             />;
 
             day2 =  <Card 
@@ -280,30 +293,40 @@ class App extends React.Component {
                             temp_high={Math.round(this.state.datesList.day2[this.state.datesList.day2.length -1].highest_temp)}
                             temp_low={Math.round(this.state.datesList.day2[this.state.datesList.day2.length -1].lowest_temp)}
                             date={day2Date}
+                            wind_deg={this.state.datesList.day2[1].wind_deg}
+                            wind_speed={Math.round(this.state.datesList.day2[1].wind_speed)}
                             />; 
             day3 =  <Card 
                             src={this.state.datesList.day3[5].icon}
                             temp_high={Math.round(this.state.datesList.day3[this.state.datesList.day3.length -1].highest_temp)}
                             temp_low={Math.round(this.state.datesList.day3[this.state.datesList.day3.length -1].lowest_temp)}
                             date={day3Date}
+                            wind_deg={this.state.datesList.day3[1].wind_deg}
+                            wind_speed={Math.round(this.state.datesList.day3[1].wind_speed)}
                             />; 
             day4 =  <Card 
                             src={this.state.datesList.day4[5].icon}
                             temp_high={Math.round(this.state.datesList.day4[this.state.datesList.day4.length -1].highest_temp)}
                             temp_low={Math.round(this.state.datesList.day4[this.state.datesList.day4.length -1].lowest_temp)}
                             date={day4Date}
+                            wind_deg={this.state.datesList.day4[1].wind_deg}
+                            wind_speed={Math.round(this.state.datesList.day4[1].wind_speed)}
                             />; 
             day5 =  <Card 
                             src={this.state.datesList.day5[5].icon}
                             temp_high={Math.round(this.state.datesList.day5[this.state.datesList.day5.length -1].highest_temp)}
                             temp_low={Math.round(this.state.datesList.day5[this.state.datesList.day5.length -1].lowest_temp)}
                             date={day5Date}
+                            wind_deg={this.state.datesList.day5[1].wind_deg}
+                            wind_speed={Math.round(this.state.datesList.day5[1].wind_speed)}
                             />; 
             day6 =  <Card 
                             src={this.state.datesList.day6[this.state.datesList.day6.length -1].icon}
                             temp_high={Math.round(this.state.datesList.day6[this.state.datesList.day6.length -1].highest_temp)}
                             temp_low={Math.round(this.state.datesList.day6[this.state.datesList.day6.length -1].lowest_temp)}
                             date={day6Date}
+                            wind_deg={this.state.datesList.day6[1].wind_deg}
+                            wind_speed={Math.round(this.state.datesList.day6[1].wind_speed)}
                             />;
             
         }
@@ -320,8 +343,9 @@ class App extends React.Component {
 
         }
         return(
-            
-            <div className="main" >
+           
+
+            <div className="main" /*style={{backgroundImage: "url(wallpapers/" +this.state.datesList.day1[].icon + ".png)"}} */>
     
       
     
@@ -353,13 +377,19 @@ ReactDOM.render(
 
 function parseDate(dateString) {
     var date = dateString;
-    console.log(date);
+    
     let month = date.slice(5,7);
     let day = date.slice(8,10);
     month = month.replace("0","");
     let hour = date.slice(11,16);
     console.log(day + '.' + month + ' ' + hour);
     return(day + '.' + month );
+}
+
+function getDayName(dateString, locale)
+{
+    var date = new Date(dateString);
+    return date.toLocaleDateString(locale, { weekday: 'long' });        
 }
 
 

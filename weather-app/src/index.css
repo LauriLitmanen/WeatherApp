@@ -1,6 +1,8 @@
 html {
+    font-family: 'Lato', sans-serif;
     padding: 0px;
     margin: 0px;
+    color: #333;
 }
 
 body {
@@ -20,6 +22,7 @@ body {
     justify-content: center;
     align-items: center;
     height: 100%;
+    background-color:#C3FBF4 ;
 }
 
 #root {
@@ -34,6 +37,19 @@ body {
     align-items: center;
 }
 
+.current {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #FDE166;
+    padding: 10px 10px 10px 10px;
+    margin: 10px;
+    border-style: none;
+    box-shadow: rgba(16,27,30,.15) 0px 1px 10px 2px;
+    border-radius: 20px;
+}
+
 .card {
     display: flex;
     flex-direction: column;
@@ -43,18 +59,33 @@ body {
     padding: 10px 10px 10px 10px;
     margin: 10px;
     border-style: none;
-    box-shadow: rgb(196, 196, 196) 0px 1px 10px 2px;
+    box-shadow: rgba(16,27,30,.15) 0px 1px 10px 2px;
+    border-radius: 20px;
     
 }
 
 .date {
     margin: 0px;
+    font-weight: bold;
+}
+
+.wind-container {
+    position: relative;
+    text-align: center;
+
 }
 
 .wind {
     height: 40px;
     width: 40px;
     margin-bottom: 10px;
+}
+
+.wind-speed {
+    position: absolute;
+    top: 37%;
+    left: 49%;
+    transform: translate(-50%, -50%);
 }
 
 .temp {
