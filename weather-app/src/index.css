@@ -40,21 +40,39 @@ body {
     align-items: center;
     justify-content: center;
     background-color: white;
-    padding: 10px;
+    padding: 10px 10px 10px 10px;
     margin: 10px;
     border-style: none;
     box-shadow: rgb(196, 196, 196) 0px 1px 10px 2px;
     
 }
 
+.date {
+    margin: 0px;
+}
+
+.wind {
+    height: 40px;
+    width: 40px;
+    margin-bottom: 10px;
+}
+
 .temp {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    
+    font-weight: bold;
 }
 
 .temp-high {
-    margin: 0px 15px 0px 15px;
+    margin: 0px 10px 0px 10px;
+    color: red;
+}
+
+.temp-low {
+    margin: 0px 10px 0px 10px;
+    color: blue;
 }
 
 
@@ -106,8 +124,4 @@ body {
     font-size: 20px;
 }
 
-.temp {
-    color: red;
-    font-weight: bold;
-}
 

@@ -87,10 +87,12 @@ class Card extends React.Component {
     render() {
         return (
             <button className="card">
-                <p>{this.props.date}</p>
+                <p className="date">{this.props.date}</p>
                 <img src={process.env.PUBLIC_URL + '/icons/' +  this.props.src + '.png'}></img>
+                <img className="wind" src={process.env.PUBLIC_URL + '/icons/' + 'wind.png'} style={{transform: "rotate("+ this.props.wind_deg +"deg)"}}></img>
                 <div className="temp">
-                    <p className="temp-high">{this.props.temp_high + '°'}</p>              
+                    <p className="temp-high">{this.props.temp_high + '°'}</p> 
+                    <p className="temp-low">{this.props.temp_low + '°'}</p>              
                 </div>
             </button>
         );
@@ -150,7 +152,8 @@ class App extends React.Component {
                 day5:[{}],
                 day6:[{}],
             };
-                                                           //  declare date variable and set date to 1
+            var highest_temp;                                        //  declare date variable and set date to 1
+            var lowest_temp;
             for (i = 0; i < result.list.length; i++) {                  //  Loop through every list item in results
                 var copy_of_i= i;                                       //  declare some variables
                 var prev_i = copy_of_i - 1;
@@ -160,18 +163,40 @@ class App extends React.Component {
                     day = 1;                                            //  first list item is day 1
                 }
                 else if (i > 0) {                                       //  if list item is not first
-                    var prev_date = result.list[prev_i].dt_txt;         //  declare yeasterday variable
+                    var prev_date = result.list[prev_i].dt_txt;         //  declare yesterday variable
                     if((date.slice(8,10)) == (prev_date.slice(8,10))) { //  compare current list items date to previous list items date
-                        day = day;                                      //  if it is a match then its still the same day
+                        day = day;                                      //  if it's a match then its still the same day
                     }
                     else {                                              //  if not then the day has changed
-                        day = day + 1;                              
+                        day = day + 1;
+                        highest_temp = null;
+                        lowest_temp = null;                              
                     }
                 }
+
+                if (highest_temp == null) {                             // Get highest temp of the day
+                    highest_temp = result.list[i].main.temp_max
+                }
+                if (result.list[i].main.temp_max > highest_temp){           
+                    highest_temp = result.list[i].main.temp_max
+                }
+
+                
+
+                if (lowest_temp == null) {                              // Get lowest temp of the day
+                    lowest_temp = result.list[i].main.temp_min
+                }
+                if (result.list[i].main.temp_min < lowest_temp){
+                    lowest_temp = result.list[i].main.temp_min
+                }
+
+
                 
                 var date = {
                     'id': day,                                          //  use the day variable as an id for date object
                     'dateAndTime': result.list[i].dt_txt,
+                    'highest_temp': highest_temp,
+                    'lowest_temp': lowest_temp,
                     'temp_max': result.list[i].main.temp_max,
                     'temp_min': result.list[i].main.temp_min,
                     'icon': result.list[i].weather[0].icon,
@@ -203,7 +228,8 @@ class App extends React.Component {
                 }   
                 
                 console.log(datesList);
- 
+                
+                
 
             }
             this.setState({
@@ -243,33 +269,40 @@ class App extends React.Component {
 
             day1 =  <Card 
                             src={this.state.datesList.day1[1].icon}
-                            temp_high={Math.round(this.state.datesList.day1[1].temp_max)}
-                            date={day1Date} 
+                            temp_high={Math.round(this.state.datesList.day1[this.state.datesList.day1.length -1].highest_temp)}
+                            temp_low={Math.round(this.state.datesList.day1[this.state.datesList.day1.length -1].lowest_temp)}
+                            date={day1Date}
+                            wind_deg={this.state.datesList.day1[1].wind_deg}
                             />;
 
             day2 =  <Card 
                             src={this.state.datesList.day2[5].icon}
-                            temp_high={Math.round(this.state.datesList.day2[1].temp_max)}
+                            temp_high={Math.round(this.state.datesList.day2[this.state.datesList.day2.length -1].highest_temp)}
+                            temp_low={Math.round(this.state.datesList.day2[this.state.datesList.day2.length -1].lowest_temp)}
                             date={day2Date}
                             />; 
             day3 =  <Card 
                             src={this.state.datesList.day3[5].icon}
-                            temp_high={Math.round(this.state.datesList.day3[1].temp_max)}
+                            temp_high={Math.round(this.state.datesList.day3[this.state.datesList.day3.length -1].highest_temp)}
+                            temp_low={Math.round(this.state.datesList.day3[this.state.datesList.day3.length -1].lowest_temp)}
                             date={day3Date}
                             />; 
             day4 =  <Card 
                             src={this.state.datesList.day4[5].icon}
-                            temp_high={Math.round(this.state.datesList.day4[1].temp_max)}
+                            temp_high={Math.round(this.state.datesList.day4[this.state.datesList.day4.length -1].highest_temp)}
+                            temp_low={Math.round(this.state.datesList.day4[this.state.datesList.day4.length -1].lowest_temp)}
                             date={day4Date}
                             />; 
             day5 =  <Card 
                             src={this.state.datesList.day5[5].icon}
-                            temp_high={Math.round(this.state.datesList.day5[1].temp_max)}
+                            temp_high={Math.round(this.state.datesList.day5[this.state.datesList.day5.length -1].highest_temp)}
+                            temp_low={Math.round(this.state.datesList.day5[this.state.datesList.day5.length -1].lowest_temp)}
                             date={day5Date}
                             />; 
             day6 =  <Card 
                             src={this.state.datesList.day6[this.state.datesList.day6.length -1].icon}
-                            temp_high={Math.round(this.state.datesList.day6[this.state.datesList.day6.length -1].temp_max)}
+                            temp_high={Math.round(this.state.datesList.day6[this.state.datesList.day6.length -1].highest_temp)}
+                            temp_low={Math.round(this.state.datesList.day6[this.state.datesList.day6.length -1].lowest_temp)}
                             date={day6Date}
                             />;
             
