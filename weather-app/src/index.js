@@ -17,7 +17,7 @@ class Current extends React.Component {
             locationKey: '',
             wind_deg: '',
             wind_speed: '',
-            src: null,
+            src: undefined,
             temp: null,
             data: null,
             err: null,
@@ -70,13 +70,13 @@ class Current extends React.Component {
             <h2>Now</h2>
             <img className="current-img" src= {process.env.PUBLIC_URL + '/icons/' +  this.state.src + '.png'}/>
             <div className="wind-container">
-                    <img className="wind" src={process.env.PUBLIC_URL + '/icons/' + 'wind.png'} style={{transform: "rotate("+ this.state.wind_deg +"deg)"}}></img>
+                    <img className="wind" src={process.env.PUBLIC_URL + '/icons/' + 'wind.png'} style={{transform: "rotate("+ this.state.wind_deg +"deg)", transitionProperty: "transform", transitionDuration: "3s"}}></img>
                     <div className="wind-speed" >{Math.round(this.state.wind_speed)}</div>
             </div>
 
             
             <div className="current-temp">
-                <p className="current-temp-high">{this.state.temp + '°'}</p>
+                <p className="current-temp-high">{this.state.temp || 0 + '°'}</p>
                 <p className=""></p>                 
             </div>
             
@@ -98,14 +98,14 @@ class Card extends React.Component {
         return (
             <button className="card">
                 <p className="date">{this.props.date}</p>
-                <img src={process.env.PUBLIC_URL + '/icons/' +  this.props.src + '.png'}></img>
+                <img className="icon-img" src={process.env.PUBLIC_URL + '/icons/' +  this.props.src + '.png'}></img>
                 <div className="wind-container">
-                    <img className="wind" src={process.env.PUBLIC_URL + '/icons/' + 'wind.png'} style={{transform: "rotate("+ this.props.wind_deg +"deg)"}}></img>
+                    <img className="wind" src={process.env.PUBLIC_URL + '/icons/' + 'wind.png'} style={{transform: "rotate("+ this.props.wind_deg +"deg)", transitionProperty: "transform", transitionDuration: "3s" }}></img>
                     <div className="wind-speed" >{this.props.wind_speed}</div>
                 </div>
                 <div className="temp">
-                    <p className="temp-high">{this.props.temp_high + '°'}</p> 
-                    <p className="temp-low">{this.props.temp_low + '°'}</p>              
+                    <p className="temp-high">{this.props.temp_high || 0 + '°'}</p> 
+                    <p className="temp-low">{this.props.temp_low || 0 + '°'}</p>              
                 </div>
             </button>
         );
@@ -260,6 +260,15 @@ class App extends React.Component {
 
 
         }, (error) => {
+            if (error.PERMISSION_DENIED) {
+                console.log("Error: permission denied");
+                // Your custom modal here.
+                alert("This app needs your permission to use your location." + "Click the 🔒 or ℹ in the left corner of the address bar and allow location services");
+            }
+            else {
+                console.log("error" + error);
+            }
+            
         this.setState({ latitude: 'err-latitude', longitude: 'err-longitude' })
         })
     }
@@ -337,10 +346,6 @@ class App extends React.Component {
             day4 = <Card/>;
             day5 = <Card/>;
             day6 = <Card/>;
-           
-            
-         
-
         }
         return(
            
@@ -361,7 +366,7 @@ class App extends React.Component {
                     {day5}
                     {day6}
                 </div>
-              
+                
             </div>
     );}
         

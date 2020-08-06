@@ -48,6 +48,8 @@ body {
     border-style: none;
     box-shadow: rgba(16,27,30,.15) 0px 1px 10px 2px;
     border-radius: 20px;
+    min-width: 193px;
+    min-height: 309px;
 }
 
 .card {
@@ -61,7 +63,17 @@ body {
     border-style: none;
     box-shadow: rgba(16,27,30,.15) 0px 1px 10px 2px;
     border-radius: 20px;
+    min-width: 120px;
+    min-height: 203px;
     
+    
+}
+
+.icon-img  {
+    max-width: 100px;
+    max-height: 100px;
+    min-width: 100px;
+    min-height: 100px;
 }
 
 .date {
@@ -135,6 +147,7 @@ body {
 .current-img {
     height: 100px;
     width: auto;
+    
 }
 
 .current-temp {
