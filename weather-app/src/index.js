@@ -76,7 +76,7 @@ class Current extends React.Component {
 
             
             <div className="current-temp">
-                <p className="current-temp-high">{this.state.temp || 0 + '°'}</p>
+                <p className="current-temp-high">{this.state.temp + '°' || 0 + '°'}</p>
                 <p className=""></p>                 
             </div>
             
@@ -104,8 +104,8 @@ class Card extends React.Component {
                     <div className="wind-speed" >{this.props.wind_speed}</div>
                 </div>
                 <div className="temp">
-                    <p className="temp-high">{this.props.temp_high || 0 + '°'}</p> 
-                    <p className="temp-low">{this.props.temp_low || 0 + '°'}</p>              
+                    <p className="temp-high">{this.props.temp_high + '°' || 0 + '°'}</p> 
+                    <p className="temp-low">{this.props.temp_low + '°' || 0 + '°'}</p>              
                 </div>
             </button>
         );
