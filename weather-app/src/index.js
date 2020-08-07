@@ -96,7 +96,7 @@ class Card extends React.Component {
 
     render() {
         return (
-            <button className="card">
+            <button onClick={()=> { cardClicked(this.props) }} className="card">
                 <p className="date">{this.props.date}</p>
                 <img className="icon-img" src={process.env.PUBLIC_URL + '/icons/' +  this.props.src + '.png'}></img>
                 <div className="wind-container">
@@ -295,6 +295,7 @@ class App extends React.Component {
                             date={day1Date}
                             wind_deg={this.state.datesList.day1[1].wind_deg}
                             wind_speed={Math.round(this.state.datesList.day1[1].wind_speed)}
+                            allData={this.state.datesList.day1}
                             />;
 
             day2 =  <Card 
@@ -304,6 +305,7 @@ class App extends React.Component {
                             date={day2Date}
                             wind_deg={this.state.datesList.day2[1].wind_deg}
                             wind_speed={Math.round(this.state.datesList.day2[1].wind_speed)}
+                            allData={this.state.datesList.day2}
                             />; 
             day3 =  <Card 
                             src={this.state.datesList.day3[5].icon}
@@ -312,6 +314,7 @@ class App extends React.Component {
                             date={day3Date}
                             wind_deg={this.state.datesList.day3[1].wind_deg}
                             wind_speed={Math.round(this.state.datesList.day3[1].wind_speed)}
+                            allData={this.state.datesList.day3}
                             />; 
             day4 =  <Card 
                             src={this.state.datesList.day4[5].icon}
@@ -320,6 +323,7 @@ class App extends React.Component {
                             date={day4Date}
                             wind_deg={this.state.datesList.day4[1].wind_deg}
                             wind_speed={Math.round(this.state.datesList.day4[1].wind_speed)}
+                            allData={this.state.datesList.day4}
                             />; 
             day5 =  <Card 
                             src={this.state.datesList.day5[5].icon}
@@ -328,6 +332,7 @@ class App extends React.Component {
                             date={day5Date}
                             wind_deg={this.state.datesList.day5[1].wind_deg}
                             wind_speed={Math.round(this.state.datesList.day5[1].wind_speed)}
+                            allData={this.state.datesList.day5}
                             />; 
             day6 =  <Card 
                             src={this.state.datesList.day6[this.state.datesList.day6.length -1].icon}
@@ -336,6 +341,7 @@ class App extends React.Component {
                             date={day6Date}
                             wind_deg={this.state.datesList.day6[1].wind_deg}
                             wind_speed={Math.round(this.state.datesList.day6[1].wind_speed)}
+                            allData={this.state.datesList.day6}
                             />;
             
         }
@@ -366,7 +372,22 @@ class App extends React.Component {
                     {day5}
                     {day6}
                 </div>
-                
+                <div id="hourly-wrapper" >
+                    
+                </div>
+               
+               
+
+              
+                <div id="myModal" className="modal">
+
+  
+                <div className="modal-content" id="modalContent">
+                    <span className="close">&times;</span>
+                    <p id="modal-header"></p>
+                </div>
+
+</div>
             </div>
     );}
         
@@ -397,5 +418,104 @@ function getDayName(dateString, locale)
     return date.toLocaleDateString(locale, { weekday: 'long' });        
 }
 
+function cardClicked(data) {
+    console.log("klik");
+    console.log(data);
+    var element = document.getElementById("hourly-wrapper");
+    var i = 1;
+    element.style.display = "flex";
+    element.innerHTML = '';
+    for (i = 1 ;i < data.allData.length; i++) {
+        let div = document.createElement('div');
+        div.classList.add("hourly-div");
+
+        let headerDate = parseDate(data.allData[i].dateAndTime); //Modal header
+        let dateName = getDayName(data.allData[i].dateAndTime, "en", "EN");
+        document.getElementById("modal-header").innerHTML =  dateName + " " + headerDate ;
+        
+        let image = document.createElement('img');                  //image
+        image.src = '/icons/' + data.allData[i].icon + '.png' ;
+
+        let time = document.createElement('p');                     //time
+        let parsedTime = data.allData[i].dateAndTime.slice(11,16);
+        time.innerHTML = parsedTime;
+
+        let temp = document.createElement('p');                     //temp
+        if (Math.round(data.allData[i].temp_max) >= 0) {
+            temp.innerHTML =  '+' + Math.round(data.allData[i].temp_max) + '°';
+        }
+        else {
+            temp.innerHTML =  '-' + Math.round(data.allData[i].temp_max) + '°';
+        }
+
+        let windContainer = document.createElement('div');          //wind
+        windContainer.classList.add("wind-container");
+        let wind = document.createElement('img');
+        let windSpeed = document.createElement('div');
+        windSpeed.classList.add("wind-speed");
+        windSpeed.innerHTML = Math.round(data.allData[i].wind_speed);
+        wind.classList.add("wind");
+        wind.src = '/icons/wind.png';
+        wind.style.cssText = "transform: rotate(" + data.allData[i].wind_deg + "deg); transition-property: transform; transition-duration: 3s;";
+        windContainer.appendChild(wind);
+        windContainer.appendChild(windSpeed);
+        
+        //transform: "rotate("+ this.props.wind_deg +"deg)", transitionProperty: "transform", transitionDuration: "3s" 
+        
+        element.appendChild(div);
+        div.appendChild(time);
+        div.appendChild(image);
+        div.appendChild(temp);
+        div.appendChild(windContainer);
+        modalContent.appendChild(div);
+        modal.style.display = "flex";
+        
+
+        console.log(i);
+    }
+}
+
+  // Get the modal
+  var modal = document.getElementById("myModal");
+
+  // Get the modal content div
+  var modalContent = document.getElementById("modalContent");
+
+  // Get the button that opens the modal
+  var card = document.getElementsByClassName("card");
+  
+  // Get the <span> element that closes the modal
+  var span = document.getElementsByClassName("close")[0];
+  
+  // When the user clicks on the button, open the modal
+  card.onclick = function() {
+    modal.style.display = "block";
+  }
+  
+  // When the user clicks on <span> (x), close the modal
+  span.onclick = function() {
+    modal.style.display = "none";
+    modalContent.innerHTML = ' ';
+    let header = document.createElement('p');
+    header.setAttribute("id","modal-header");
+    let exitButton = document.createElement("span");
+    exitButton.classList.add("close");
+    modalContent.appendChild(exitButton);
+    modalContent.appendChild(header);
+  }
+  
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+        modalContent.innerHTML = ' ';
+        let header = document.createElement('p');
+        header.setAttribute("id","modal-header");
+        let exitButton = document.createElement("span");
+        exitButton.classList.add("close");
+        modalContent.appendChild(exitButton);
+        modalContent.appendChild(header);
+    }
+  }
 
 
