@@ -197,17 +197,20 @@ body {
     background-color: rgb(0,0,0); /* Fallback color */
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
     
+    
   }
   
   /* Modal Content/Box */
   .modal-content {
     background-color: #fefefe;
-    margin: 15% auto; /* 15% from the top and centered */
+    margin: 15px auto; /* 15% from the top and centered */
     padding: 20px 100px 20px 100px;
     border: 1px solid #888;
     width: auto; /* Could be more or less, depending on screen size */
     overflow: auto;
     box-shadow: rgba(16,27,30,.40) 0px 1px 10px 2px;
+    border-radius: 40px;
+    
     
   }
   
@@ -217,7 +220,7 @@ body {
     float: right;
     font-size: 28px;
     font-weight: bold;
-    margin-right: -90px;
+    margin-right: -60px;
     
   }
   

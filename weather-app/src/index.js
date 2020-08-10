@@ -76,7 +76,7 @@ class Current extends React.Component {
 
             
             <div className="current-temp">
-                <p className="current-temp-high">{this.state.temp + '°' || 0 + '°'}</p>
+                <p className="current-temp-high">{  this.state.temp >= 0 ? '+' + this.state.temp  + '°' :  + '-' + this.state.temp  + '°' || 0 + '°'}</p>
                 <p className=""></p>                 
             </div>
             
@@ -104,8 +104,8 @@ class Card extends React.Component {
                     <div className="wind-speed" >{this.props.wind_speed}</div>
                 </div>
                 <div className="temp">
-                    <p className="temp-high">{this.props.temp_high + '°' || 0 + '°'}</p> 
-                    <p className="temp-low">{this.props.temp_low + '°' || 0 + '°'}</p>              
+                    <p className="temp-high">{this.props.temp_high >= 0 ? '+' + this.props.temp_high + '°' : '-' + this.props.temp_high + '°' || 0 + '°'}</p> 
+                    <p className="temp-low">{this.props.temp_low >= 0 ? '+' + this.props.temp_low + '°' : '-' + this.props.temp_low + '°' || 0 + '°'}</p>              
                 </div>
             </button>
         );
@@ -129,8 +129,11 @@ class App extends React.Component {
             pvm: '',
             src: '',
             isLoaded: false,
+            value: '',
         };
         this.getMyLocation = this.getMyLocation.bind(this);
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
         
     }
     
@@ -274,6 +277,17 @@ class App extends React.Component {
     }
     }
 
+    handleChange(event){
+        this.setState({value: event.target.value});
+        event.preventDefault();
+    }
+
+    handleSubmit(event) {
+        let x = this.state.value;
+        console.log(x);
+        event.preventDefault();
+    }
+
     
 // <Card src={this.state.datesList.day1[1].icon}> </Card>
     render() {
@@ -358,9 +372,15 @@ class App extends React.Component {
 
             <div className="main" /*style={{backgroundImage: "url(wallpapers/" +this.state.datesList.day1[].icon + ".png)"}} */>
     
-      
-    
-            
+            <form onSubmit={this.handleSubmit}>
+                <label>
+                Name:
+                <input type="text" value={this.state.value} onChange={this.handleChange} />
+                </label>
+                <input type="submit" value="Submit" />
+            </form>
+                
+
                 <div className="current-wrapper"  >
                     <Current></Current>
                 </div>
@@ -383,7 +403,7 @@ class App extends React.Component {
 
   
                 <div className="modal-content" id="modalContent">
-                    <span className="close">&times;</span>
+                    <span className="close" id="close">&times;</span>
                     <p id="modal-header"></p>
                 </div>
 
@@ -408,7 +428,7 @@ function parseDate(dateString) {
     let day = date.slice(8,10);
     month = month.replace("0","");
     let hour = date.slice(11,16);
-    console.log(day + '.' + month + ' ' + hour);
+    
     return(day + '.' + month );
 }
 
@@ -484,24 +504,34 @@ function cardClicked(data) {
   // Get the button that opens the modal
   var card = document.getElementsByClassName("card");
   
-  // Get the <span> element that closes the modal
-  var span = document.getElementsByClassName("close")[0];
+  // Add event listener to document and delegate it to the dynamically added <span> tag
+  document.addEventListener('click',function(e){
+    if(e.target && e.target.id== 'close'){
+        spanClicked();
+        
+    }
+});
   
   // When the user clicks on the button, open the modal
   card.onclick = function() {
     modal.style.display = "block";
   }
+
+  
+  
   
   // When the user clicks on <span> (x), close the modal
-  span.onclick = function() {
-    modal.style.display = "none";
-    modalContent.innerHTML = ' ';
-    let header = document.createElement('p');
-    header.setAttribute("id","modal-header");
-    let exitButton = document.createElement("span");
-    exitButton.classList.add("close");
-    modalContent.appendChild(exitButton);
-    modalContent.appendChild(header);
+    function spanClicked() {
+        modal.style.display = "none";
+        modalContent.innerHTML = ' ';
+        let header = document.createElement('p');
+        header.setAttribute("id","modal-header");
+        let exitButton = document.createElement("span");
+        exitButton.classList.add("close");
+        exitButton.innerHTML = "&times;"
+        exitButton.setAttribute("id","close");
+        modalContent.appendChild(exitButton);
+        modalContent.appendChild(header);
   }
   
   // When the user clicks anywhere outside of the modal, close it
@@ -513,9 +543,20 @@ function cardClicked(data) {
         header.setAttribute("id","modal-header");
         let exitButton = document.createElement("span");
         exitButton.classList.add("close");
+        exitButton.innerHTML = "&times;"
+        exitButton.setAttribute("id","close");
         modalContent.appendChild(exitButton);
         modalContent.appendChild(header);
     }
   }
 
+  
 
+
+
+/*<form onsubmit="return validateForm()">
+<label for="search">Search by City: </label>
+<input type="text" id="search" name="search"></input>
+<input type="submit" value="Search"></input>
+
+</form>*/
