@@ -10,76 +10,40 @@ class Current extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            latitude: '',
-            longitude: '',
-            link: '',
-            location: '',
-            locationKey: '',
-            wind_deg: '',
-            wind_speed: '',
-            src: undefined,
-            temp: null,
-            data: null,
-            err: null,
+            
         };
-        this.getMyLocation = this.getMyLocation.bind(this)
+        
     }
 
     componentDidMount() {
-        this.getMyLocation();
+        
+        
       }
 
-      getMyLocation() {
-        const location = window.navigator && window.navigator.geolocation
-        if (location) {
-          location.getCurrentPosition((position) => {
-            this.setState({
-              latitude: position.coords.latitude,
-              longitude: position.coords.longitude,
-            })
+     
+        
+      
 
-            let link = 'http://api.openweathermap.org/data/2.5/weather?lat=' + this.state.latitude + '&lon=' + this.state.longitude + '&appid=a81617600377ed89c2f6596d66a72c1c&units=metric';
-            console.log(link);
-            fetch(link)
-            .then(res => res.json())
-            .then(
-            (result) => {
-                
-                let number = result.main.temp;
-                let rounded = Math.round(number);
-               
-                this.setState({
-                    location: result.name,
-                    temp: rounded,
-                    src: result.weather[0].icon,
-                    wind_deg: result.wind.deg,
-                    wind_speed: result.wind.speed,
-                });
-                console.log(result);
-            });
-          }, (error) => {
-            this.setState({ latitude: 'err-latitude', longitude: 'err-longitude' })
-          })
-        }
-      }
+      
     
     render() {
         return (
         <div className="current" >
-            <h1 className="current-location">{this.state.location}</h1>
-            <h2>Now</h2>
-            <img className="current-img" src= {process.env.PUBLIC_URL + '/icons/' +  this.state.src + '.png'}/>
-            <div className="wind-container">
-                    <img className="wind" src={process.env.PUBLIC_URL + '/icons/' + 'wind.png'} style={{transform: "rotate("+ this.state.wind_deg +"deg)", transitionProperty: "transform", transitionDuration: "3s"}}></img>
-                    <div className="wind-speed" >{Math.round(this.state.wind_speed)}</div>
-            </div>
+            <div className="current-content">
+                <h1 className="current-location">{this.props.location}</h1>
+                <h2>Now</h2>
+                <img className="current-img" src= {process.env.PUBLIC_URL + '/icons/' +  this.props.src + '.png'}/>
+                <div className="wind-container">
+                        <img className="wind" src={process.env.PUBLIC_URL + '/icons/' + 'wind.png'} style={{transform: "rotate("+ this.props.wind_deg +"deg)", transitionProperty: "transform", transitionDuration: "3s"}}></img>
+                        <div className="wind-speed" >{Math.round(this.props.wind_speed)}</div>
+                </div>
 
-            
-            <div className="current-temp">
-                <p className="current-temp-high">{  this.state.temp >= 0 ? '+' + this.state.temp  + '°' :  + '-' + this.state.temp  + '°' || 0 + '°'}</p>
-                <p className=""></p>                 
+                
+                <div className="current-temp">
+                    <p className="current-temp-high">{  this.props.temp >= 0 ? '+' + this.props.temp  + '°' :  + '-' + this.props.temp  + '°' || 0 + '°'}</p>
+                    <p className=""></p>                 
+                </div>
             </div>
-            
         </div>
         );
         
@@ -129,17 +93,19 @@ class App extends React.Component {
             pvm: '',
             src: '',
             isLoaded: false,
-            value: '',
+            cityName: '',
+            error: null,
         };
         this.getMyLocation = this.getMyLocation.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.getData = this.getData.bind(this);
+        this.getCurrentData = this.getCurrentData.bind(this);
         
     }
     
     componentDidMount() {
-        this.getMyLocation();
-        
+   
       }
 
     getMyLocation() {
@@ -152,114 +118,10 @@ class App extends React.Component {
         })
 
         let link = 'http://api.openweathermap.org/data/2.5/forecast?lat=' + this.state.latitude + '&lon=' + this.state.longitude + '&appid=a81617600377ed89c2f6596d66a72c1c&units=metric';
-        console.log(link);
-        fetch(link)
-        .then(res => res.json())
-        .then(
-        (result) => {
-            let i;
-            let day = 1; 
-            var datesList  =  {
-                day1:[{}],
-                day2:[{}],
-                day3:[{}],
-                day4:[{}],
-                day5:[{}],
-                day6:[{}],
-            };
-            var highest_temp;                                        //  declare date variable and set date to 1
-            var lowest_temp;
-            for (i = 0; i < result.list.length; i++) {                  //  Loop through every list item in results
-                var copy_of_i= i;                                       //  declare some variables
-                var prev_i = copy_of_i - 1;
-                var date = result.list[i].dt_txt;                       //  store date from current list item
-                
-                if(i == 0) {            
-                    day = 1;                                            //  first list item is day 1
-                }
-                else if (i > 0) {                                       //  if list item is not first
-                    var prev_date = result.list[prev_i].dt_txt;         //  declare yesterday variable
-                    if((date.slice(8,10)) == (prev_date.slice(8,10))) { //  compare current list items date to previous list items date
-                        day = day;                                      //  if it's a match then its still the same day
-                    }
-                    else {                                              //  if not then the day has changed
-                        day = day + 1;
-                        highest_temp = null;                            // on day change discard highest and lowest temp
-                        lowest_temp = null;                              
-                    }
-                }
-
-                if (highest_temp == null) {                             // Get highest temp of the day
-                    highest_temp = result.list[i].main.temp_max
-                }
-                if (result.list[i].main.temp_max > highest_temp){           
-                    highest_temp = result.list[i].main.temp_max
-                }
-
-                
-
-                if (lowest_temp == null) {                              // Get lowest temp of the day
-                    lowest_temp = result.list[i].main.temp_min
-                }
-                if (result.list[i].main.temp_min < lowest_temp){
-                    lowest_temp = result.list[i].main.temp_min
-                }
-
-
-                
-                var date = {
-                    'id': day,                                          //  use the day variable as an id for date object
-                    'dateAndTime': result.list[i].dt_txt,
-                    'highest_temp': highest_temp,
-                    'lowest_temp': lowest_temp,
-                    'temp_max': result.list[i].main.temp_max,
-                    'temp_min': result.list[i].main.temp_min,
-                    'icon': result.list[i].weather[0].icon,
-                    'desc': result.list[i].weather[0].description,
-                    'wind_deg': result.list[i].wind.deg,
-                    'wind_speed': result.list[i].wind.speed,
-                }
-                                 
-                //var datesList = this.state.datesList;                   //  make a copy of dateslist
-                
-
-                if (day === 1){
-                    datesList.day1.push(date);                                   //  add new date to copy of datelist
-                }
-                else if (day === 2){
-                    datesList.day2.push(date); 
-                }
-                else if (day === 3){
-                    datesList.day3.push(date); 
-                }
-                else if (day === 4){
-                    datesList.day4.push(date); 
-                }
-                else if (day === 5){
-                    datesList.day5.push(date); 
-                } 
-                else if (day === 6){
-                    datesList.day6.push(date); 
-                }   
-                
-                console.log(datesList);
-                
-                
-
-            }
-            this.setState({
-                datesList: datesList,                               //  update state dateslist
-            });
-            // console.log('STATELIST = ' ,this.state.datesList);
-            //console.log(result);
-            //console.log(this.state.datesList.length);
-            //console.log(this.state.datesList.day1[1].icon);
-            //console.log('datesList: ' , this.state.datesList);
-            //this.renderCard(1);
-            this.setState({
-                isLoaded: true,
-            });
-        });
+        let currentLink = 'http://api.openweathermap.org/data/2.5/weather?lat=' + this.state.latitude + '&lon=' + this.state.longitude + '&appid=a81617600377ed89c2f6596d66a72c1c&units=metric'        
+        //console.log(link);
+        this.getData(link);
+        this.getCurrentData(currentLink);
 
 
         }, (error) => {
@@ -277,15 +139,183 @@ class App extends React.Component {
     }
     }
 
+
+    getCurrentData(link){
+        fetch(link)
+        .then(res => res.json())
+        .then(
+        (result) => {
+            console.log('result ok:', result.cod);
+            console.log('current getdata');
+            console.log('result: ' , result);
+
+            if (result.cod == 200) {
+                let number = result.main.temp;
+                let rounded = Math.round(number);
+           
+                this.setState({
+                    currentLocation: result.name,
+                    currentTemp: rounded,
+                    currentSrc: result.weather[0].icon,
+                    currentWind_deg: result.wind.deg,
+                    currentWind_speed: result.wind.speed,
+                });
+                //console.log(result);
+            }
+            else {
+                alert(result.message);
+            }
+            
+        },
+        (error) => {
+            this.setState({
+              isLoaded: true,
+              error
+        
+            });  
+        }  
+        );
+      }
+
+    getData(link) {
+       
+            fetch(link)
+            .then(res => res.json())
+            .then(
+            (result) => {
+                let i;
+                let day = 1; 
+                var datesList  =  {
+                    day1:[{}],
+                    day2:[{}],
+                    day3:[{}],
+                    day4:[{}],
+                    day5:[{}],
+                    day6:[{}],
+                };
+                console.log('inside getData');
+                var highest_temp;                                        //  declare date variable and set date to 1
+                var lowest_temp;
+                //console.log(result.list[1]);
+                //console.log(link);
+                console.log(result);
+                    if (result.cod == 200) {
+                        for (i = 0; i < result.list.length; i++) {                  //  Loop through every list item in results
+                            var copy_of_i= i;                                       //  declare some variables
+                            var prev_i = copy_of_i - 1;
+                            var date = result.list[i].dt_txt;                       //  store date from current list item
+                            
+                            if(i == 0) {            
+                                day = 1;                                            //  first list item is day 1
+                            }
+                            else if (i > 0) {                                       //  if list item is not first
+                                var prev_date = result.list[prev_i].dt_txt;         //  declare yesterday variable
+                                if((date.slice(8,10)) == (prev_date.slice(8,10))) { //  compare current list items date to previous list items date
+                                    day = day;                                      //  if it's a match then its still the same day
+                                }
+                                else {                                              //  if not then the day has changed
+                                    day = day + 1;
+                                    highest_temp = null;                            // on day change discard highest and lowest temp
+                                    lowest_temp = null;                              
+                                }
+                            }
+    
+                            if (highest_temp == null) {                             // Get highest temp of the day
+                                highest_temp = result.list[i].main.temp_max
+                            }
+                            if (result.list[i].main.temp_max > highest_temp){           
+                                highest_temp = result.list[i].main.temp_max
+                            }
+    
+    
+                            if (lowest_temp == null) {                              // Get lowest temp of the day
+                                lowest_temp = result.list[i].main.temp_min
+                            }
+                            if (result.list[i].main.temp_min < lowest_temp){
+                                lowest_temp = result.list[i].main.temp_min
+                            }
+    
+                            var date = {
+                                'id': day,                                          //  use the day variable as an id for date object
+                                'dateAndTime': result.list[i].dt_txt,
+                                'highest_temp': highest_temp,
+                                'lowest_temp': lowest_temp,
+                                'temp_max': result.list[i].main.temp_max,
+                                'temp_min': result.list[i].main.temp_min,
+                                'icon': result.list[i].weather[0].icon,
+                                'desc': result.list[i].weather[0].description,
+                                'wind_deg': result.list[i].wind.deg,
+                                'wind_speed': result.list[i].wind.speed,
+                            }
+    
+                            if (day === 1){
+                                datesList.day1.push(date);                                   //  add new date to copy of datelist
+                            }
+                            else if (day === 2){
+                                datesList.day2.push(date); 
+                            }
+                            else if (day === 3){
+                                datesList.day3.push(date); 
+                            }
+                            else if (day === 4){
+                                datesList.day4.push(date); 
+                            }
+                            else if (day === 5){
+                                datesList.day5.push(date); 
+                            } 
+                            else if (day === 6){
+                                datesList.day6.push(date); 
+                            }   
+                        }
+                        console.log('inside getData()' , datesList, link);
+                        this.setState({
+                            datesList: datesList,                               //  update state dateslist
+                        });
+                        // console.log('STATELIST = ' ,this.state.datesList);
+                        //console.log(result);
+                        //console.log(this.state.datesList.length);
+                        //console.log(this.state.datesList.day1[1].icon);
+                        //console.log('datesList: ' , this.state.datesList);
+                        //this.renderCard(1);
+                        this.setState({
+                            isLoaded: true,
+                        });
+                    }
+                    else {
+                        alert(result.message);
+                        this.setState({
+                            isLoaded: false,
+                        });
+                    }
+                    
+                
+            },
+            (error) => {
+                this.setState({
+                  isLoaded: true,
+                  error
+            
+                });  
+            }   
+        )
+}
+
+
     handleChange(event){
-        this.setState({value: event.target.value});
+        this.setState({cityName: event.target.value});
         event.preventDefault();
     }
 
     handleSubmit(event) {
-        let x = this.state.value;
+        let x = this.state.cityName;
         console.log(x);
+        let link = 'http://api.openweathermap.org/data/2.5/forecast?q=' + this.state.cityName + '&appid=a81617600377ed89c2f6596d66a72c1c&units=metric&mode=json';
+        let currentLink = 'http://api.openweathermap.org/data/2.5/weather?q=' + this.state.cityName + '&appid=a81617600377ed89c2f6596d66a72c1c&units=metric&mode=json'; 
+        console.log(link);
+        this.getData(link);
+        this.getCurrentData(currentLink);
         event.preventDefault();
+        
     }
 
     
@@ -293,14 +323,25 @@ class App extends React.Component {
     render() {
         
         const isLoaded = this.state.isLoaded;
-        let day1, day2, day3, day4, day5, day6;
+        let day1, day2, day3, day4, day5, day6, current;
         if(isLoaded) {
+            
+            
            let day1Date = getDayName(this.state.datesList.day1[this.state.datesList.day1.length -1].dateAndTime, "en", "EN") + " " + parseDate(this.state.datesList.day1[this.state.datesList.day1.length -1].dateAndTime);
            let day2Date = getDayName(this.state.datesList.day2[5].dateAndTime, "en", "EN") + " " + parseDate(this.state.datesList.day2[5].dateAndTime);
            let day3Date = getDayName(this.state.datesList.day3[5].dateAndTime, "en", "EN") + " " + parseDate(this.state.datesList.day3[5].dateAndTime);
            let day4Date = getDayName(this.state.datesList.day4[5].dateAndTime, "en", "EN") + " " + parseDate(this.state.datesList.day4[5].dateAndTime);
            let day5Date = getDayName(this.state.datesList.day5[5].dateAndTime, "en", "EN") + " " + parseDate(this.state.datesList.day5[5].dateAndTime);
            let day6Date = getDayName(this.state.datesList.day6[this.state.datesList.day6.length -1].dateAndTime, "en", "EN") + " " + parseDate(this.state.datesList.day6[this.state.datesList.day6.length -1].dateAndTime);
+
+
+            current = <Current
+                            src={this.state.currentSrc}
+                            location={this.state.currentLocation}
+                            wind_deg={this.state.currentWind_deg}
+                            wind_speed={this.state.currentWind_speed}
+                            temp={this.state.currentTemp}
+                            />;
 
             day1 =  <Card 
                             src={this.state.datesList.day1[1].icon}
@@ -360,6 +401,7 @@ class App extends React.Component {
             
         }
         else {
+            current = <Current/>;
             day1 = <Card/>;
             day2 = <Card/>;
             day3 = <Card/>;
@@ -371,18 +413,20 @@ class App extends React.Component {
            
 
             <div className="main" /*style={{backgroundImage: "url(wallpapers/" +this.state.datesList.day1[].icon + ".png)"}} */>
+
+            <button  id="locationButton" onClick={this.getMyLocation}> <img src={'/icons/location.png'}/> </button>
     
             <form onSubmit={this.handleSubmit}>
                 <label>
-                Name:
-                <input type="text" value={this.state.value} onChange={this.handleChange} />
+                City Name:
+                <input id="cityInput" type="text" placeholder="E.g. Seattle" value={this.state.cityName} onChange={this.handleChange} />
                 </label>
-                <input type="submit" value="Submit" />
+                <input id="searchButton" type="submit" value="Search" />
             </form>
                 
 
                 <div className="current-wrapper"  >
-                    <Current></Current>
+                   {current}
                 </div>
                 <div className="cards-wrapper">
                     {day1}
@@ -439,8 +483,8 @@ function getDayName(dateString, locale)
 }
 
 function cardClicked(data) {
-    console.log("klik");
-    console.log(data);
+    //console.log("klik");
+    //console.log(data);
     var element = document.getElementById("hourly-wrapper");
     var i = 1;
     element.style.display = "flex";
@@ -491,7 +535,7 @@ function cardClicked(data) {
         modal.style.display = "flex";
         
 
-        console.log(i);
+        //console.log(i);
     }
 }
 
