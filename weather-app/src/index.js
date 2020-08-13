@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { library } from '@fortawesome/fontawesome-svg-core'
+
 
 
 
@@ -12,22 +12,11 @@ class Current extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            
         };
-        
     }
-
     componentDidMount() {
-        
-        
+   
       }
-
-     
-        
-      
-
-      
-    
     render() {
         return (
         <div className="current" >
@@ -42,7 +31,7 @@ class Current extends React.Component {
 
                 
                 <div className="current-temp">
-                    <p className="current-temp-high">{  this.props.temp >= 0 ? '+' + this.props.temp  + '°' :  + '-' + this.props.temp  + '°' || 0 + '°'}</p>
+                    <p className="current-temp-high">{  this.props.temp >= 0 ? '+' + this.props.temp  + '°' :  + '' + this.props.temp  + '°' || 0 + '°'}</p>
                     <p className=""></p>                 
                 </div>
             </div>
@@ -70,8 +59,8 @@ class Card extends React.Component {
                     <div className="wind-speed" >{this.props.wind_speed}</div>
                 </div>
                 <div className="temp">
-                    <p className="temp-high">{this.props.temp_high >= 0 ? '+' + this.props.temp_high + '°' : '-' + this.props.temp_high + '°' || 0 + '°'}</p> 
-                    <p className="temp-low">{this.props.temp_low >= 0 ? '+' + this.props.temp_low + '°' : '-' + this.props.temp_low + '°' || 0 + '°'}</p>              
+                    <p className="temp-high">{this.props.temp_high >= 0 ? '+' + this.props.temp_high + '°' :  + this.props.temp_high + '°' || 0 + '°'}</p> 
+                    <p className="temp-low">{this.props.temp_low >= 0 ? '+' + this.props.temp_low + '°' :  + this.props.temp_low + '°' || 0 + '°'}</p>              
                 </div>
             </button>
         );
@@ -287,6 +276,8 @@ class App extends React.Component {
                     }
                     else {
                         alert(result.message);
+                        let div = document.getElementById("weatherWrapper");
+                        div.classList.replace('visible', 'hidden');
                         this.setState({
                             isLoaded: false,
                         });
@@ -419,14 +410,18 @@ class App extends React.Component {
 
             <div className="main" /*style={{backgroundImage: "url(wallpapers/" +this.state.datesList.day1[].icon + ".png)"}} */>
 
-            <button  id="locationButton" onClick={this.getMyLocation}> <img src={'/icons/location.png'}/> </button>
-    
+            
+        <div className="formWrapper">
             <form onSubmit={this.handleSubmit}>
                 <div className="inputWrapper">
                     <input id="cityInput" type="text" placeholder="City e.g. Seattle" value={this.state.cityName} onChange={this.handleChange} />
-                    <input id="searchButton" type="image"  src="/icons/arrow.png" />  
+                    <input id="searchButton" type="image"  src="/icons/arrow.png" /> 
+                    
                 </div>
+                
             </form>
+            <button  id="locationButton" onClick={this.getMyLocation}> <img src={'/icons/location.png'}/> </button>
+        </div>
                 
             <div id="weatherWrapper" className="hidden">
 

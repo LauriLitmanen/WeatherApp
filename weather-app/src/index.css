@@ -1,3 +1,6 @@
+
+
+
 html {
     font-family: 'Lato', sans-serif;
     padding: 0px;
@@ -25,7 +28,8 @@ body {
     justify-content: center;
     align-items: center;
     height: 100%;
-    background-color:#C3FBF4 ;
+    background: #0f2027; /* fallback for old browsers */
+    background: linear-gradient(to right,#5ea5c4, #4289a1, #296883);
 }
 
 #root {
@@ -59,12 +63,13 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: #FDE166;
+    background-color: #2e6a92;
     border-style: none;
     box-shadow: rgba(16,27,30,.15) 0px 1px 10px 2px;
     border-radius: 20px;
     min-width: 193px;
     min-height: 309px;
+    color: white;
 }
 
 .card {
@@ -80,6 +85,7 @@ body {
     border-radius: 20px;
     min-width: 120px;
     min-height: 203px;
+    cursor: pointer;
     
     
 }
@@ -244,12 +250,22 @@ body {
     font-weight: bold;
   }
 
+
+
+.formWrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-left: 55px;
+}
+
   #locationButton {
       background-color: transparent;
       border: none;
       border-radius: 100px;
       padding-top: 5px;
       margin: 10px;
+      opacity: 0.8;
   }
 
   #locationButton :hover {
@@ -262,6 +278,15 @@ body {
   }
 
   
+
+  /* Change the white to any color ;) */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active  {
+    -webkit-box-shadow: 0 0 0 30px white inset !important;
+}
+
 
   .inputWrapper {
       display: flex;
@@ -300,3 +325,8 @@ body {
 
  
 
+@media only screen and (max-width: 768px) {
+   
+
+    
+}
