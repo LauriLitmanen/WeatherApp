@@ -1,5 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { library } from '@fortawesome/fontawesome-svg-core'
+
 
 
 import './index.css';
@@ -105,7 +107,7 @@ class App extends React.Component {
     }
     
     componentDidMount() {
-   
+        
       }
 
     getMyLocation() {
@@ -280,6 +282,8 @@ class App extends React.Component {
                         this.setState({
                             isLoaded: true,
                         });
+                        let div = document.getElementById("weatherWrapper");
+                        div.classList.replace('hidden', 'visible');
                     }
                     else {
                         alert(result.message);
@@ -314,6 +318,7 @@ class App extends React.Component {
         console.log(link);
         this.getData(link);
         this.getCurrentData(currentLink);
+        
         event.preventDefault();
         
     }
@@ -417,14 +422,15 @@ class App extends React.Component {
             <button  id="locationButton" onClick={this.getMyLocation}> <img src={'/icons/location.png'}/> </button>
     
             <form onSubmit={this.handleSubmit}>
-                <label>
-                City Name:
-                <input id="cityInput" type="text" placeholder="E.g. Seattle" value={this.state.cityName} onChange={this.handleChange} />
-                </label>
-                <input id="searchButton" type="submit" value="Search" />
+                <div className="inputWrapper">
+                    <input id="cityInput" type="text" placeholder="City e.g. Seattle" value={this.state.cityName} onChange={this.handleChange} />
+                    <input id="searchButton" type="image"  src="/icons/arrow.png" />  
+                </div>
             </form>
                 
+            <div id="weatherWrapper" className="hidden">
 
+            
                 <div className="current-wrapper"  >
                    {current}
                 </div>
@@ -439,6 +445,7 @@ class App extends React.Component {
                 <div id="hourly-wrapper" >
                     
                 </div>
+            </div>
                
                
 
