@@ -155,13 +155,13 @@ class App extends React.Component {
       this.state.latitude +
       "&lon=" +
       this.state.longitude +
-      "&appid=a81617600377ed89c2f6596d66a72c1c&units=metric";
+      "&appid=" + process.env.REACT_APP_YOUR_API_KEY_NAME + "&units=metric";
     let currentLink = //coordinates link for current weather
       "http://api.openweathermap.org/data/2.5/weather?lat=" +
       this.state.latitude +
       "&lon=" +
       this.state.longitude +
-      "&appid=a81617600377ed89c2f6596d66a72c1c&units=metric";
+      "&appid=" + process.env.REACT_APP_YOUR_API_KEY_NAME + "&units=metric";
     this.getData(link); //Get data with the created links
     this.getCurrentData(currentLink);
   }
@@ -354,11 +354,11 @@ class App extends React.Component {
     let link =
       "http://api.openweathermap.org/data/2.5/forecast?q=" +
       this.state.cityName +
-      "&appid=a81617600377ed89c2f6596d66a72c1c&units=metric&mode=json";
+      "&appid=" + process.env.REACT_APP_YOUR_API_KEY_NAME + "&units=metric&mode=json";
     let currentLink =
       "http://api.openweathermap.org/data/2.5/weather?q=" +
       this.state.cityName +
-      "&appid=a81617600377ed89c2f6596d66a72c1c&units=metric&mode=json";
+      "&appid=" + process.env.REACT_APP_YOUR_API_KEY_NAME + "&units=metric&mode=json";
     this.getData(link);
     this.getCurrentData(currentLink);
     event.preventDefault(); //prevent page reload
