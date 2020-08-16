@@ -151,7 +151,7 @@ class App extends React.Component {
       longitude: position.coords.longitude,
     });
     let link = //coordinates link
-      "http://api.openweathermap.org/data/2.5/forecast?lat=" +
+      "https://api.openweathermap.org/data/2.5/forecast?lat=" +
       this.state.latitude +
       "&lon=" +
       this.state.longitude +
@@ -615,7 +615,7 @@ function cardClicked(data) {
       dateName + " " + headerDate;
 
     let image = document.createElement("img"); //image
-    image.src = "/icons/" + data.allData[i].icon + ".png";
+    image.src = process.env.PUBLIC_URL + "/icons/" + data.allData[i].icon + ".png";
 
     let time = document.createElement("p"); //time
     let parsedTime = data.allData[i].dateAndTime.slice(11, 16);
@@ -635,7 +635,7 @@ function cardClicked(data) {
     windSpeed.classList.add("wind-speed");
     windSpeed.innerHTML = Math.round(data.allData[i].wind_speed);
     wind.classList.add("wind");
-    wind.src = "/icons/wind.png";
+    wind.src = process.env.PUBLIC_URL + "/icons/wind.png";
     wind.style.cssText =
       "transform: rotate(" +
       data.allData[i].wind_deg +
