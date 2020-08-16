@@ -549,11 +549,11 @@ class App extends React.Component {
                 value={this.state.cityName}
                 onChange={this.handleChange}
               />
-              <input id="searchButton" type="image" src="/icons/arrow.png" />
+              <input id="searchButton" type="image" src= {process.env.PUBLIC_URL + "/icons/arrow.png"} />
             </div>
           </form>
           <button id="locationButton" onClick={this.getMyLocation}>
-            <img src={"/icons/location.png"} />
+            <img src={process.env.PUBLIC_URL + "/icons/location.png"} />
           </button>
         </div>
 
