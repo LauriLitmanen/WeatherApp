@@ -151,13 +151,13 @@ class App extends React.Component {
       longitude: position.coords.longitude,
     });
     let link = //coordinates link
-      "http://api.openweathermap.org/data/2.5/forecast?lat=" +
+      "https://api.openweathermap.org/data/2.5/forecast?lat=" +
       this.state.latitude +
       "&lon=" +
       this.state.longitude +
       "&appid=" + process.env.REACT_APP_YOUR_API_KEY_NAME + "&units=metric";
     let currentLink = //coordinates link for current weather
-      "http://api.openweathermap.org/data/2.5/weather?lat=" +
+      "https://api.openweathermap.org/data/2.5/weather?lat=" +
       this.state.latitude +
       "&lon=" +
       this.state.longitude +
@@ -352,11 +352,11 @@ class App extends React.Component {
   handleSubmit(event) {
     // form the api links and call the getdata methods
     let link =
-      "http://api.openweathermap.org/data/2.5/forecast?q=" +
+      "https://api.openweathermap.org/data/2.5/forecast?q=" +
       this.state.cityName +
       "&appid=" + process.env.REACT_APP_YOUR_API_KEY_NAME + "&units=metric&mode=json";
     let currentLink =
-      "http://api.openweathermap.org/data/2.5/weather?q=" +
+      "https://api.openweathermap.org/data/2.5/weather?q=" +
       this.state.cityName +
       "&appid=" + process.env.REACT_APP_YOUR_API_KEY_NAME + "&units=metric&mode=json";
     this.getData(link);
