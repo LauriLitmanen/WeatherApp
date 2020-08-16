@@ -151,7 +151,7 @@ class App extends React.Component {
       longitude: position.coords.longitude,
     });
     let link = //coordinates link
-      "https://api.openweathermap.org/data/2.5/forecast?lat=" +
+      "http://api.openweathermap.org/data/2.5/forecast?lat=" +
       this.state.latitude +
       "&lon=" +
       this.state.longitude +
@@ -706,3 +706,6 @@ window.onclick = function (event) {
     modalContent.appendChild(header);
   }
 };
+
+
+//comment
